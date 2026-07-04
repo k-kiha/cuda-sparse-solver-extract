@@ -1,4 +1,4 @@
-// C caller for the CUDA sparse solver showcase.
+// C caller for the CUDA sparse solver core.
 // It allocates CUDA device memory directly and calls the same kisti_solver_c
 // ABI used by the Fortran bind(C) path.
 #include <stdio.h>

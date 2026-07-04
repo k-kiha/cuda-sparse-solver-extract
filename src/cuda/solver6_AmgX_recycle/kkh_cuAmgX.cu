@@ -1,5 +1,5 @@
 /*
- * Optional AmgX coefficient-reuse path.
+ * AmgX coefficient-reuse core path.
  * Role: demonstrate initial AmgX setup/solve, coefficient replacement, and a
  * later solve that can reuse an existing solver object.
  * Uses: AmgX C API and CUDA device pointers supplied by the common ABI.

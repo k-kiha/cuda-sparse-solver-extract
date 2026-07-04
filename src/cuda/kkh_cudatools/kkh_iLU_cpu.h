@@ -1,5 +1,5 @@
 /*
- * CPU iLU(0) helper declarations for the optional cuSPARSE SpSV path.
+ * CPU iLU(0) helper declarations for the cuSPARSE SpSV core path.
  * The public helper copies device CSR to host, computes L/U, then uploads
  * separate L/U CSR arrays back to CUDA device memory.
  */

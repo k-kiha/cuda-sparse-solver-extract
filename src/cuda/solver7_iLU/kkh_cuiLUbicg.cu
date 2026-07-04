@@ -1,5 +1,5 @@
 /*
- * Optional iLU(0) preconditioned CUDA solver.
+ * iLU(0) preconditioned CUDA solver core path.
  * Role: show iLU(0) factorization feeding cuSPARSE SpSV lower/upper triangular
  * solves inside a BiCGStab iteration.
  * Uses: CUDA Runtime workspaces, cuSPARSE SpMV, cuSPARSE SpSV, cuBLAS Ddot,

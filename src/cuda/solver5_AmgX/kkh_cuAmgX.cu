@@ -1,5 +1,5 @@
 /*
- * Optional AmgX one-shot solve path.
+ * AmgX one-shot solve core path.
  * Role: demonstrate AmgX resource/config creation, CSR matrix upload, solver
  * setup, solve, and download for a single AMG/Krylov solve.
  * Uses: AmgX C API and CUDA device pointers supplied by the common ABI.

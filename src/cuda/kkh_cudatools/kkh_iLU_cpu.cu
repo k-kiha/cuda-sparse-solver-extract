@@ -1,5 +1,5 @@
 /*
- * iLU(0) factorization helper for the optional SpSV path.
+ * iLU(0) factorization helper for the SpSV core path.
  * Role: copy device CSR data to host, compute CPU iLU(0), split L/U into CSR,
  * then upload L/U CSR data back to the GPU for cuSPARSE SpSV.
  * Uses: CUDA Runtime memcpy/allocation around CPU factorization.

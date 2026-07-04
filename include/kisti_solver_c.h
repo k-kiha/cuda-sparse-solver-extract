@@ -1,5 +1,5 @@
 /*
- * Public C ABI for the CUDA sparse solver showcase.
+ * Public C ABI for the CUDA sparse solver core.
  * All pointer arguments are CUDA device pointers. Fortran reaches this ABI
  * through bind(C); C callers include this header directly.
  */

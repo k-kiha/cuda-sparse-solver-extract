@@ -1,5 +1,5 @@
 /*
- * Optional AmgX one-shot solve ABI.
+ * AmgX one-shot solve ABI.
  * Uses the AmgX C API with CUDA device pointers supplied by kisti_solver_c.
  */
 extern "C" {

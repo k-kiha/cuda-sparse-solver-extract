@@ -3,7 +3,7 @@
  * Role: expose one C ABI for Fortran/C callers and dispatch to the selected
  * CUDA solver path.
  * Uses: CUDA Runtime synchronization; default cuSPARSE/cuBLAS solver dispatch;
- * optional cuSPARSE SpSV+iLU(0) and AmgX dispatch.
+ * cuSPARSE SpSV+iLU(0) and AmgX dispatch.
  */
 #include <stdio.h>
 #include <cuda_runtime.h>
@@ -33,10 +33,10 @@ void kisti_solver_c(int n, int m, int *d_rowPtr, int *d_colInd, double *d_val, d
     cudaDeviceSynchronize();
 
 #if defined(KISTI_SOLVER_ILU)
-    // [cuSPARSE SpSV + iLU(0)] Optional triangular-solve preconditioned path.
+    // [cuSPARSE SpSV + iLU(0)] Triangular-solve preconditioned core path.
     kkh_cuiLUbicg(n, m, d_rowPtr, d_colInd, d_val, d_vec);
 #elif defined(KISTI_SOLVER_AMGX)
-    // [AmgX] Optional AMG/GMRES setup, solve, and reuse path.
+    // [AmgX] AMG/GMRES setup, solve, and reuse core path.
     kkh_cuAmgX(n, m, d_rowPtr, d_colInd, d_val, d_vec);
 #else
     // [cuSPARSE] CSR SpMV + [cuBLAS] dot based default BiCGStab path.

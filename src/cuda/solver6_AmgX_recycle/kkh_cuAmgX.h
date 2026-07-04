@@ -1,5 +1,5 @@
 /*
- * Optional AmgX coefficient-reuse solve ABI.
+ * AmgX coefficient-reuse solve ABI.
  * Uses the AmgX C API to demonstrate setup, coefficient replacement, and reuse.
  */
 extern "C" {

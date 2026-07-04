@@ -1,5 +1,5 @@
 /*
- * Optional iLU(0)-preconditioned BiCGStab solver ABI.
+ * iLU(0)-preconditioned BiCGStab solver ABI.
  * Uses cuSPARSE SpSV lower/upper solves, cuSPARSE SpMV, and cuBLAS Ddot.
  */
 extern "C" {
