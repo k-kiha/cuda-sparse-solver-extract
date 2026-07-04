@@ -100,16 +100,20 @@ Successful runs create result files under `build/run/*/`.
 ## Run With AmgX
 
 AmgX is a core solver path in this extract, but it requires the external AmgX
-library. Use an existing installation through `AMGX_DIR` or install it locally:
+library. Put `CUDA_HOME` and AmgX options in `config.mk`, then install the
+repo-local AmgX dependency through Make:
 
 ```bash
-src/amgx_setup/prepare_amgx.sh
+make amgx-install
 source src/amgx_setup/env_amgx.sh
 make core-amgx
 make examples-amgx
 make run-amgx-c
 make run-amgx-fortran
 ```
+
+`source src/amgx_setup/env_amgx.sh` also reads `AMGX_DIR` from `config.mk`
+when present, so custom AmgX install paths stay consistent.
 
 After AmgX is available, all core paths can be run together:
 

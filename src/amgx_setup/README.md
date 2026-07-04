@@ -12,12 +12,17 @@ amgx_local/build/     CMake build tree, ignored by git
 amgx_local/install/   local AmgX install prefix, ignored by git
 ```
 
-Prepare AmgX locally without using Make:
+Recommended path: put CUDA and AmgX settings in `config.mk`, then prepare AmgX
+through Make so those values are used:
 
 ```bash
-src/amgx_setup/prepare_amgx.sh
+make amgx-install
 source src/amgx_setup/env_amgx.sh
 ```
+
+`env_amgx.sh` reads `AMGX_DIR` from `config.mk` when it is present. If
+`AMGX_DIR` is already exported in the shell, that environment value takes
+priority.
 
 The prepare script clones or updates `AMGX_GIT_URL`, checks out
 `AMGX_GIT_REF`, builds AmgX, installs it into `amgx_local/install`, and
@@ -32,17 +37,19 @@ AMGX_CUDA_ARCH=80
 AMGX_NO_MPI=ON
 ```
 
-Example for the A100 server with CUDA 12.9.1:
+Example `config.mk` entries for the A100 server with CUDA 12.9.1:
+
+```make
+CUDA_HOME ?= /apps/cuda/12.9.1
+AMGX_CUDA_ARCH ?= 80
+AMGX_BUILD_JOBS ?= 8
+```
+
+Direct script execution is also available, but it reads environment variables
+rather than `config.mk`:
 
 ```bash
 CUDA_HOME=/apps/cuda/12.9.1 src/amgx_setup/prepare_amgx.sh
-source src/amgx_setup/env_amgx.sh
-```
-
-The old Make wrapper is still available:
-
-```bash
-make amgx-install
 source src/amgx_setup/env_amgx.sh
 ```
 

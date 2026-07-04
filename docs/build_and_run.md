@@ -80,12 +80,15 @@ Use an existing AmgX install:
 AMGX_DIR ?= /path/to/amgx
 ```
 
-Or install into the repo-local prefix:
+Or install into the repo-local prefix using the values from `config.mk`:
 
 ```bash
-src/amgx_setup/prepare_amgx.sh
+make amgx-install
 source src/amgx_setup/env_amgx.sh
 ```
+
+`env_amgx.sh` reads `AMGX_DIR` from `config.mk` when present, so a custom
+AmgX install prefix only needs to be written once.
 
 Then build and run:
 
@@ -106,10 +109,18 @@ AMGX_CUDA_ARCH=80
 AMGX_NO_MPI=ON
 ```
 
-On the A100 server used for this extract, the prepare step can be run as:
+On the A100 server used for this extract, `config.mk` can contain:
+
+```make
+CUDA_HOME ?= /apps/cuda/12.9.1
+AMGX_CUDA_ARCH ?= 80
+AMGX_BUILD_JOBS ?= 8
+```
+
+Then run:
 
 ```bash
-CUDA_HOME=/apps/cuda/12.9.1 src/amgx_setup/prepare_amgx.sh
+make amgx-install
 source src/amgx_setup/env_amgx.sh
 ```
 
