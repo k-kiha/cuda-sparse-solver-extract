@@ -14,6 +14,6 @@ Linked core path:
 ```text
 examples/amgx_c/main.c
 -> libkisti_solver_c_amgx.so
--> src/cuda/kisti_solver_c.cu built with KISTI_SOLVER_AMGX
--> src/cuda/solver6_AmgX_recycle
+-> src/kisti_solver_c.cu built with KISTI_SOLVER_AMGX
+-> src/solver6_AmgX_recycle
 ```

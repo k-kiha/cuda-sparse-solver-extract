@@ -1,6 +1,6 @@
 # AmgX Runtime Configuration
 
-`src/cuda/solver5_AmgX` and `src/cuda/solver6_AmgX_recycle` call:
+`src/solver5_AmgX` and `src/solver6_AmgX_recycle` call:
 
 ```c
 AMGX_config_create_from_file(&cfg, "amgx_config.json");

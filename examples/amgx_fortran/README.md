@@ -13,7 +13,7 @@ Linked core path:
 
 ```text
 examples/amgx_fortran/main.f90
--> src/fortran/mod_kisti.f90
+-> examples/fortran_common/mod_kisti.f90
 -> libkisti_solver_c_amgx.so
--> src/cuda/solver6_AmgX_recycle
+-> src/solver6_AmgX_recycle
 ```

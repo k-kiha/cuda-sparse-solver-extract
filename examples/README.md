@@ -1,6 +1,6 @@
 # Runnable Examples
 
-The examples are thin callers for the core implementation in `src/cuda`.
+The examples are thin callers for the core implementation in `src`.
 They all solve the small CSR `A x = b` case from `data/small_csr`.
 
 | Example | Linked solver library | Core path |

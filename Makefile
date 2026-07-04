@@ -12,14 +12,14 @@ AMGX_BUILD_DIR ?= $(AMGX_SRC_DIR)/build
 AMGX_CUDA_ARCH ?= 80
 BUILD_DIR ?= build
 
-CUDA_SRC := src/cuda
-FORTRAN_SRC := src/fortran
+CORE_SRC := src
+FORTRAN_COMMON := examples/fortran_common
 OBJ_DIR := $(BUILD_DIR)/obj
 LIB_DIR := $(BUILD_DIR)/lib
 BIN_DIR := $(BUILD_DIR)/bin
 RUN_DIR := $(BUILD_DIR)/run
 
-CUDA_CXXFLAGS ?= -fPIC -cuda -O3 -I$(CUDA_SRC) -I$(CUDA_INC_PATH)
+CUDA_CXXFLAGS ?= -fPIC -cuda -O3 -I$(CORE_SRC) -I$(CUDA_INC_PATH)
 FORTRAN_FLAGS ?= -cuda -O2
 C_FLAGS ?= -O3 -std=gnu11 -Iinclude -I$(CUDA_INC_PATH)
 RPATH_FLAGS := -Wl,-rpath,$(abspath $(LIB_DIR)) -Wl,-rpath,$(CUDA_LIB_PATH)
@@ -56,29 +56,29 @@ env-check:
 $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR):
 	mkdir -p $@
 
-$(OBJ_DIR)/kkh_cudatools.o: $(CUDA_SRC)/kkh_cudatools/kkh_cudatools.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kkh_cudatools.o: $(CORE_SRC)/kkh_cudatools/kkh_cudatools.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/kkh_iLU_cpu.o: $(CUDA_SRC)/kkh_cudatools/kkh_iLU_cpu.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kkh_iLU_cpu.o: $(CORE_SRC)/kkh_cudatools/kkh_iLU_cpu.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/kkh_cudiagbicg.o: $(CUDA_SRC)/solver3_diagbicg/kkh_cudiagbicg.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kkh_cudiagbicg.o: $(CORE_SRC)/solver3_diagbicg/kkh_cudiagbicg.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/kkh_cuiLUbicg.o: $(CUDA_SRC)/solver7_iLU/kkh_cuiLUbicg.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kkh_cuiLUbicg.o: $(CORE_SRC)/solver7_iLU/kkh_cuiLUbicg.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/kkh_cuAmgX_recycle.o: $(CUDA_SRC)/solver6_AmgX_recycle/kkh_cuAmgX.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kkh_cuAmgX_recycle.o: $(CORE_SRC)/solver6_AmgX_recycle/kkh_cuAmgX.cu | $(OBJ_DIR)
 	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'make amgx-install' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -I$(AMGX_DIR)/include -c $< -o $@
 
-$(OBJ_DIR)/kisti_solver_c_diag.o: $(CUDA_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kisti_solver_c_diag.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR)/kisti_solver_c_ilu.o: $(CUDA_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kisti_solver_c_ilu.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_ILU -c $< -o $@
 
-$(OBJ_DIR)/kisti_solver_c_amgx.o: $(CUDA_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
+$(OBJ_DIR)/kisti_solver_c_amgx.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
 	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'make amgx-install' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_AMGX -I$(AMGX_DIR)/include -c $< -o $@
 
@@ -100,7 +100,7 @@ solver: lib-diag
 ilu: lib-ilu
 amgx: lib-amgx
 
-$(OBJ_DIR)/mod_kisti.o: $(FORTRAN_SRC)/mod_kisti.f90 | $(OBJ_DIR)
+$(OBJ_DIR)/mod_kisti.o: $(FORTRAN_COMMON)/mod_kisti.f90 | $(OBJ_DIR)
 	$(NVFORTRAN) $(FORTRAN_FLAGS) -module $(OBJ_DIR) -c $< -o $@
 
 $(OBJ_DIR)/main_diag_fortran.o: examples/diag_fortran/main.f90 $(OBJ_DIR)/mod_kisti.o | $(OBJ_DIR)

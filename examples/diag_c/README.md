@@ -14,6 +14,6 @@ Linked core path:
 ```text
 examples/diag_c/main.c
 -> libkisti_solver_c.so
--> src/cuda/kisti_solver_c.cu
--> src/cuda/solver3_diagbicg
+-> src/kisti_solver_c.cu
+-> src/solver3_diagbicg
 ```

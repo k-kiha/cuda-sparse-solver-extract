@@ -2,20 +2,20 @@
 
 This repository is a public extract of the CUDA C/C++ sparse solver layer from
 a larger KISTI SMR virtual reactor acceleration codebase. The core
-implementation is under `src/cuda`; the remaining directories are runnable
+implementation is under `src`; the remaining directories are runnable
 examples, small CSR input data, documentation, and dependency helpers.
 
 ## Core Solver Paths
 
-`src/cuda` contains three project-derived CUDA sparse solver paths:
+`src` contains three project-derived CUDA sparse solver paths:
 
 | Path | Role | CUDA libraries |
 |---|---|---|
-| `src/cuda/solver3_diagbicg` | Diagonal-preconditioned BiCGStab | cuSPARSE SpMV, cuBLAS, CUDA kernels |
-| `src/cuda/solver7_iLU` | iLU(0)-preconditioned BiCGStab | cuSPARSE SpMV, cuSPARSE SpSV, cuBLAS |
-| `src/cuda/solver5_AmgX`, `src/cuda/solver6_AmgX_recycle` | AmgX AMG/GMRES setup, solve, coefficient reuse | AmgX C API, CUDA device pointers |
+| `src/solver3_diagbicg` | Diagonal-preconditioned BiCGStab | cuSPARSE SpMV, cuBLAS, CUDA kernels |
+| `src/solver7_iLU` | iLU(0)-preconditioned BiCGStab | cuSPARSE SpMV, cuSPARSE SpSV, cuBLAS |
+| `src/solver5_AmgX`, `src/solver6_AmgX_recycle` | AmgX AMG/GMRES setup, solve, coefficient reuse | AmgX C API, CUDA device pointers |
 
-The common ABI is implemented in `src/cuda/kisti_solver_c.cu`:
+The common ABI is implemented in `src/kisti_solver_c.cu`:
 
 ```c
 void kisti_solver_c(int n, int m,
@@ -28,8 +28,8 @@ All pointer arguments are CUDA device pointers.
 ## Layout
 
 ```text
-src/cuda/                  Core CUDA sparse solver implementation
-src/fortran/               Fortran bind(C) adapter for the same CUDA ABI
+src/                       Core CUDA sparse solver implementation
+examples/fortran_common/   Fortran bind(C) adapter for the same CUDA ABI
 include/                   Public C ABI header
 examples/diag_c/           C caller for diagonal BiCGStab
 examples/diag_fortran/     Fortran caller for diagonal BiCGStab
@@ -102,6 +102,6 @@ make test-all
 
 ## Documentation
 
-- `docs/cuda_core.md`: what each `src/cuda` solver path does.
+- `docs/cuda_core.md`: what each `src` solver path does.
 - `docs/build_and_run.md`: command-oriented build and run guide.
 - `docs/result_message.md`: performance-claim boundary and measurement template.

@@ -1,6 +1,6 @@
 
 module mod_kisti
-    ! Fortran interface layer for the CUDA sparse solver core.
+    ! Fortran example adapter for the CUDA sparse solver core.
     ! NVFORTRAN cudafor device arrays hold CSR data on the GPU, and bind(C)
     ! forwards those device pointers to the public kisti_solver_c ABI.
     use iso_c_binding

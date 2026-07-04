@@ -14,6 +14,6 @@ Linked core path:
 ```text
 examples/ilu_c/main.c
 -> libkisti_solver_c_ilu.so
--> src/cuda/kisti_solver_c.cu built with KISTI_SOLVER_ILU
--> src/cuda/solver7_iLU
+-> src/kisti_solver_c.cu built with KISTI_SOLVER_ILU
+-> src/solver7_iLU
 ```
