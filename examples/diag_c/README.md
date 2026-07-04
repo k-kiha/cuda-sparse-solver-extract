@@ -6,7 +6,7 @@ This C caller allocates CUDA device memory directly, uploads CSR data from
 Build and run:
 
 ```bash
-make test-diag-c
+make run-diag-c
 ```
 
 Linked core path:

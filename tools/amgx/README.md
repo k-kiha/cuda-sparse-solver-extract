@@ -21,8 +21,8 @@ Build and run the AmgX core path:
 
 ```bash
 make lib-amgx
-make test-amgx-c
-make test-amgx-fortran
+make run-amgx-c
+make run-amgx-fortran
 ```
 
 For an NVIDIA A100 server, the default `AMGX_CUDA_ARCH` is `80`.

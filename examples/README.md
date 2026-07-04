@@ -24,7 +24,7 @@ make examples
 Run the no-AmgX examples:
 
 ```bash
-make test
+make run
 ```
 
 The CUPID-like application bridge is kept in `integration/`, not in this

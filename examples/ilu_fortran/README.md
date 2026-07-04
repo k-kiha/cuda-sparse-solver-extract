@@ -6,7 +6,7 @@ used by the diagonal path. The difference is the linked solver library.
 Build and run:
 
 ```bash
-make test-ilu-fortran
+make run-ilu-fortran
 ```
 
 Linked core path:

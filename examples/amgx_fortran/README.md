@@ -6,7 +6,7 @@ same `kisti_solver_c` ABI.
 Build and run:
 
 ```bash
-make test-amgx-fortran
+make run-amgx-fortran
 ```
 
 Linked core path:

@@ -34,6 +34,10 @@ CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas $(NVTX_LIBS)
 	example-ilu-c example-ilu-fortran \
 	example-amgx-c example-amgx-fortran \
 	example-c example-fortran \
+	run run-no-amgx run-all \
+	run-diag-c run-diag-fortran \
+	run-ilu-c run-ilu-fortran \
+	run-amgx-c run-amgx-fortran \
 	test test-no-amgx test-all \
 	test-diag-c test-diag-fortran \
 	test-ilu-c test-ilu-fortran \
@@ -172,27 +176,37 @@ prepare-run-data-amgx: prepare-run-data
 	cp examples/amgx_config/amgx_config.json $(RUN_DIR)/amgx_c/amgx_config.json
 	cp examples/amgx_config/amgx_config.json $(RUN_DIR)/amgx_fortran/amgx_config.json
 
-test-diag-c: example-diag-c prepare-run-data
+run-diag-c: example-diag-c prepare-run-data
 	cd $(RUN_DIR)/diag_c && $(abspath $(BIN_DIR)/diag_c.exe) && test -s result_c.txt
 
-test-diag-fortran: example-diag-fortran prepare-run-data
+run-diag-fortran: example-diag-fortran prepare-run-data
 	cd $(RUN_DIR)/diag_fortran && $(abspath $(BIN_DIR)/diag_fortran.exe) && test -s result.txt
 
-test-ilu-c: example-ilu-c prepare-run-data
+run-ilu-c: example-ilu-c prepare-run-data
 	cd $(RUN_DIR)/ilu_c && $(abspath $(BIN_DIR)/ilu_c.exe) && test -s result_c.txt
 
-test-ilu-fortran: example-ilu-fortran prepare-run-data
+run-ilu-fortran: example-ilu-fortran prepare-run-data
 	cd $(RUN_DIR)/ilu_fortran && $(abspath $(BIN_DIR)/ilu_fortran.exe) && test -s result.txt
 
-test-amgx-c: example-amgx-c prepare-run-data-amgx
+run-amgx-c: example-amgx-c prepare-run-data-amgx
 	cd $(RUN_DIR)/amgx_c && $(abspath $(BIN_DIR)/amgx_c.exe) && test -s result_c.txt
 
-test-amgx-fortran: example-amgx-fortran prepare-run-data-amgx
+run-amgx-fortran: example-amgx-fortran prepare-run-data-amgx
 	cd $(RUN_DIR)/amgx_fortran && $(abspath $(BIN_DIR)/amgx_fortran.exe) && test -s result.txt
 
-test-no-amgx: test-diag-c test-diag-fortran test-ilu-c test-ilu-fortran
-test-all: test-no-amgx test-amgx-c test-amgx-fortran
-test: test-no-amgx
+run-no-amgx: run-diag-c run-diag-fortran run-ilu-c run-ilu-fortran
+run-all: run-no-amgx run-amgx-c run-amgx-fortran
+run: run-no-amgx
+
+test-diag-c: run-diag-c
+test-diag-fortran: run-diag-fortran
+test-ilu-c: run-ilu-c
+test-ilu-fortran: run-ilu-fortran
+test-amgx-c: run-amgx-c
+test-amgx-fortran: run-amgx-fortran
+test-no-amgx: run-no-amgx
+test-all: run-all
+test: run
 
 amgx-fetch:
 	AMGX_SRC_DIR="$(abspath $(AMGX_SRC_DIR))" tools/amgx/fetch_amgx.sh
@@ -206,7 +220,7 @@ amgx-build:
 
 amgx-install: amgx-fetch amgx-build
 	@echo "AmgX installed under $(abspath $(AMGX_DIR))."
-	@echo "Run 'make lib-amgx' or 'make test-amgx-c' to validate the AmgX core path."
+	@echo "Run 'make lib-amgx' or 'make run-amgx-c' to validate the AmgX core path."
 
 cupid-bridge:
 	@echo "CUPID/gfortran bridge sources are staged in integration/cupid_gfortran_bridge."

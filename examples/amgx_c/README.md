@@ -6,7 +6,7 @@ solver library. AmgX must be installed or built through `tools/amgx`.
 Build and run:
 
 ```bash
-make test-amgx-c
+make run-amgx-c
 ```
 
 Linked core path:

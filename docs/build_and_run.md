@@ -51,16 +51,16 @@ small CSR input.
 
 ```bash
 make clean
-make test
+make run
 ```
 
 Individual targets:
 
 ```bash
-make test-diag-c
-make test-diag-fortran
-make test-ilu-c
-make test-ilu-fortran
+make run-diag-c
+make run-diag-fortran
+make run-ilu-c
+make run-ilu-fortran
 ```
 
 Outputs:
@@ -90,18 +90,21 @@ source tools/amgx/env_amgx.sh
 Then run:
 
 ```bash
-make test-amgx-c
-make test-amgx-fortran
+make run-amgx-c
+make run-amgx-fortran
 ```
 
 All core paths together:
 
 ```bash
-make test-all
+make run-all
 ```
 
 The AmgX runtime looks for `amgx_config.json` in the current run directory; the
 Makefile copies `examples/amgx_config/amgx_config.json` before execution.
+
+Compatibility aliases are still available: `make test` maps to `make run`, and
+`make test-all` maps to `make run-all`.
 
 ## Link Notes
 

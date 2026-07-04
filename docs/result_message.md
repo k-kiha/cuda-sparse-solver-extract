@@ -11,7 +11,7 @@
 
 ## What Is Not Claimed Yet
 
-- 이 `_cleanup` 트리에서 `make test`로 새로 얻은 wall-clock speedup은 아직 없습니다.
+- 이 `_cleanup` 트리에서 `make run`으로 새로 얻은 wall-clock speedup은 아직 없습니다.
 - H100, GH200, H200 등 특정 GPU에서의 speedup, bandwidth, occupancy 수치는 아직 주장하지 않습니다.
 - 기존 그림 또는 가상 보고서의 수치는 재측정 전까지 공개 성능 claim으로 쓰지 않습니다.
 
@@ -45,7 +45,7 @@ profiling:
 
 ## Suggested Measurement Story
 
-1. `make test`로 작은 CSR 입력이 양쪽 caller에서 정상 실행되는지 확인합니다.
+1. `make run`으로 작은 CSR 입력이 양쪽 caller에서 정상 실행되는지 확인합니다.
 2. 큰 pressure matrix 입력을 별도 benchmark 데이터로 고정합니다.
 3. 기본 diagonal BiCGStab에서 NVTX `precond`, `Mmul`, `innerp`, `proj` 구간을 분리해 측정합니다.
 4. iLU는 SpSV 구간이 전체 solver 시간을 얼마나 차지하는지 확인합니다.

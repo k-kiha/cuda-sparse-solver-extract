@@ -7,7 +7,7 @@ NVFORTRAN device arrays and call the same `kisti_solver_c` ABI through
 Build and run:
 
 ```bash
-make test-diag-fortran
+make run-diag-fortran
 ```
 
 Linked core path:

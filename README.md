@@ -79,20 +79,20 @@ NVTX_LIBS ?= -lnvToolsExt
 
 ## Run Without AmgX
 
-This validates the diagonal and iLU core solver paths.
+This runs the diagonal and iLU core solver paths on the small CSR input.
 
 ```bash
 make clean
-make test
+make run
 ```
 
 Equivalent explicit targets:
 
 ```bash
-make test-diag-c
-make test-diag-fortran
-make test-ilu-c
-make test-ilu-fortran
+make run-diag-c
+make run-diag-fortran
+make run-ilu-c
+make run-ilu-fortran
 ```
 
 Successful runs create result files under `build/run/*/`.
@@ -105,15 +105,18 @@ library. Use an existing installation through `AMGX_DIR` or install it locally:
 ```bash
 make amgx-install
 source tools/amgx/env_amgx.sh
-make test-amgx-c
-make test-amgx-fortran
+make run-amgx-c
+make run-amgx-fortran
 ```
 
-After AmgX is available, all core paths can be tested together:
+After AmgX is available, all core paths can be run together:
 
 ```bash
-make test-all
+make run-all
 ```
+
+`make test` and `make test-all` remain compatibility aliases for `make run`
+and `make run-all`.
 
 ## Documentation
 

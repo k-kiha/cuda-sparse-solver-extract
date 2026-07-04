@@ -6,7 +6,7 @@ changes through the linked library.
 Build and run:
 
 ```bash
-make test-ilu-c
+make run-ilu-c
 ```
 
 Linked core path:
