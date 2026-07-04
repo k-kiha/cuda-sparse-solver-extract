@@ -15,11 +15,11 @@ CUDA_LIB_PATH ?= $(CUDA_HOME)/lib64
 
 # Required for the AmgX core solver path.
 # Repo-local install target:
-#   tools/amgx/prepare_amgx.sh
+#   src/amgx_setup/prepare_amgx.sh
 #   make lib-amgx
-AMGX_DIR ?= $(CURDIR)/.local/amgx
-AMGX_SRC_DIR ?= $(CURDIR)/external/AMGX
-AMGX_BUILD_DIR ?= $(AMGX_SRC_DIR)/build
+AMGX_DIR ?= $(CURDIR)/amgx_local/install
+AMGX_SRC_DIR ?= $(CURDIR)/amgx_local/source
+AMGX_BUILD_DIR ?= $(CURDIR)/amgx_local/build
 AMGX_CUDA_ARCH ?= 80
 AMGX_GIT_URL ?= https://github.com/NVIDIA/AMGX.git
 AMGX_GIT_REF ?= main

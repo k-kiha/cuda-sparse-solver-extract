@@ -6,9 +6,9 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 export AMGX_GIT_URL="${AMGX_GIT_URL:-https://github.com/NVIDIA/AMGX.git}"
 export AMGX_GIT_REF="${AMGX_GIT_REF:-main}"
-export AMGX_SRC_DIR="${AMGX_SRC_DIR:-${REPO_ROOT}/external/AMGX}"
-export AMGX_BUILD_DIR="${AMGX_BUILD_DIR:-${AMGX_SRC_DIR}/build}"
-export AMGX_INSTALL_DIR="${AMGX_INSTALL_DIR:-${REPO_ROOT}/.local/amgx}"
+export AMGX_SRC_DIR="${AMGX_SRC_DIR:-${REPO_ROOT}/amgx_local/source}"
+export AMGX_BUILD_DIR="${AMGX_BUILD_DIR:-${REPO_ROOT}/amgx_local/build}"
+export AMGX_INSTALL_DIR="${AMGX_INSTALL_DIR:-${REPO_ROOT}/amgx_local/install}"
 export AMGX_CUDA_ARCH="${AMGX_CUDA_ARCH:-80}"
 export AMGX_NO_MPI="${AMGX_NO_MPI:-ON}"
 
@@ -44,7 +44,7 @@ fi
 cat <<MSG
 [amgx] Ready.
 [amgx] Next commands:
-    source tools/amgx/env_amgx.sh
+    source src/amgx_setup/env_amgx.sh
     make core-amgx
     make examples-amgx
     make run-amgx-c

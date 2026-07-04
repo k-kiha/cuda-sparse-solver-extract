@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-AMGX_SRC_DIR="${AMGX_SRC_DIR:-external/AMGX}"
-AMGX_BUILD_DIR="${AMGX_BUILD_DIR:-${AMGX_SRC_DIR}/build}"
-AMGX_INSTALL_DIR="${AMGX_INSTALL_DIR:-.local/amgx}"
+AMGX_SRC_DIR="${AMGX_SRC_DIR:-amgx_local/source}"
+AMGX_BUILD_DIR="${AMGX_BUILD_DIR:-amgx_local/build}"
+AMGX_INSTALL_DIR="${AMGX_INSTALL_DIR:-amgx_local/install}"
 AMGX_CUDA_ARCH="${AMGX_CUDA_ARCH:-80}"
 AMGX_NO_MPI="${AMGX_NO_MPI:-ON}"
 AMGX_BUILD_JOBS="${AMGX_BUILD_JOBS:-}"
@@ -12,7 +12,7 @@ CXX_COMPILER="${CXX:-g++}"
 
 if [ ! -d "${AMGX_SRC_DIR}" ]; then
     echo "[amgx] Missing AMGX source tree: ${AMGX_SRC_DIR}" >&2
-    echo "[amgx] Run tools/amgx/fetch_amgx.sh first." >&2
+    echo "[amgx] Run src/amgx_setup/fetch_amgx.sh first." >&2
     exit 1
 fi
 

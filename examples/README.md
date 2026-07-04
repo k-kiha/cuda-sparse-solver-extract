@@ -1,7 +1,7 @@
 # Runnable Examples
 
 The example directories are thin callers for the core implementation in `src`.
-They all solve the small CSR `A x = b` case from `data/small_csr`.
+They all solve the small CSR `A x = b` case from `examples/data/small_csr`.
 
 | Example | Linked solver library | Core path |
 |---|---|---|
@@ -27,5 +27,5 @@ Run the no-AmgX examples:
 make run
 ```
 
-The CUPID-like application bridge is kept in `integration/`, not in this
-examples directory.
+The CUPID-like application bridge is kept in `src/cupid_gfortran_bridge/`, not
+in this examples directory.

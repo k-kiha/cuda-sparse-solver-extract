@@ -6,9 +6,9 @@ NVCXX ?= nvc++
 CUDA_HOME ?=
 CUDA_INC_PATH ?= $(if $(CUDA_HOME),$(CUDA_HOME)/include,)
 CUDA_LIB_PATH ?= $(if $(CUDA_HOME),$(CUDA_HOME)/lib64,)
-AMGX_DIR ?= $(CURDIR)/.local/amgx
-AMGX_SRC_DIR ?= $(CURDIR)/external/AMGX
-AMGX_BUILD_DIR ?= $(AMGX_SRC_DIR)/build
+AMGX_DIR ?= $(CURDIR)/amgx_local/install
+AMGX_SRC_DIR ?= $(CURDIR)/amgx_local/source
+AMGX_BUILD_DIR ?= $(CURDIR)/amgx_local/build
 AMGX_CUDA_ARCH ?= 80
 AMGX_GIT_URL ?= https://github.com/NVIDIA/AMGX.git
 AMGX_GIT_REF ?= main
@@ -17,7 +17,10 @@ AMGX_BUILD_JOBS ?=
 BUILD_DIR ?= build
 
 CORE_SRC := src
+PUBLIC_INC := $(CORE_SRC)/include
+AMGX_SETUP_DIR := $(CORE_SRC)/amgx_setup
 FORTRAN_COMMON := examples/_common/fortran
+EXAMPLE_DATA_DIR := examples/data/small_csr
 OBJ_DIR := $(BUILD_DIR)/obj
 LIB_DIR := $(BUILD_DIR)/lib
 BIN_DIR := $(BUILD_DIR)/bin
@@ -25,7 +28,7 @@ RUN_DIR := $(BUILD_DIR)/run
 
 CUDA_CXXFLAGS ?= -fPIC -cuda -O3 -I$(CORE_SRC) -I$(CUDA_INC_PATH)
 FORTRAN_FLAGS ?= -cuda -O2
-C_FLAGS ?= -O3 -std=gnu11 -Iinclude -I$(CUDA_INC_PATH)
+C_FLAGS ?= -O3 -std=gnu11 -I$(PUBLIC_INC) -I$(CUDA_INC_PATH)
 RPATH_FLAGS := -Wl,-rpath,$(abspath $(LIB_DIR)) -Wl,-rpath,$(CUDA_LIB_PATH)
 AMGX_RPATH_FLAGS := -Wl,-rpath,$(abspath $(AMGX_DIR)/lib)
 NVTX_LIBS ?=
@@ -46,7 +49,7 @@ CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas $(NVTX_LIBS)
 	test-diag-c test-diag-fortran \
 	test-ilu-c test-ilu-fortran \
 	test-amgx-c test-amgx-fortran \
-	amgx-fetch amgx-build amgx-install cupid-bridge \
+	amgx-fetch amgx-build amgx-install cupid-gfortran-bridge \
 	prepare-run-data prepare-run-data-amgx clean
 
 all: core examples
@@ -81,7 +84,7 @@ $(OBJ_DIR)/kkh_cuiLUbicg.o: $(CORE_SRC)/solver7_iLU/kkh_cuiLUbicg.cu | $(OBJ_DIR
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/kkh_cuAmgX_recycle.o: $(CORE_SRC)/solver6_AmgX_recycle/kkh_cuAmgX.cu | $(OBJ_DIR)
-	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'tools/amgx/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
+	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run '$(AMGX_SETUP_DIR)/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -I$(AMGX_DIR)/include -c $< -o $@
 
 $(OBJ_DIR)/kisti_solver_c_diag.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
@@ -91,7 +94,7 @@ $(OBJ_DIR)/kisti_solver_c_ilu.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_ILU -c $< -o $@
 
 $(OBJ_DIR)/kisti_solver_c_amgx.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
-	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'tools/amgx/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
+	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run '$(AMGX_SETUP_DIR)/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_AMGX -I$(AMGX_DIR)/include -c $< -o $@
 
 $(LIB_DIR)/libkisti_solver_c.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_cudiagbicg.o $(OBJ_DIR)/kisti_solver_c_diag.o | $(LIB_DIR)
@@ -101,7 +104,7 @@ $(LIB_DIR)/libkisti_solver_c_ilu.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_i
 	$(NVCXX) -fPIC -cuda -shared $^ $(CUDA_LIBS) -o $@
 
 $(LIB_DIR)/libkisti_solver_c_amgx.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_cuAmgX_recycle.o $(OBJ_DIR)/kisti_solver_c_amgx.o | $(LIB_DIR)
-	@test -f "$(AMGX_DIR)/lib/libamgxsh.so" || { echo "AmgX core path requires $(AMGX_DIR)/lib/libamgxsh.so. Run 'tools/amgx/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
+	@test -f "$(AMGX_DIR)/lib/libamgxsh.so" || { echo "AmgX core path requires $(AMGX_DIR)/lib/libamgxsh.so. Run '$(AMGX_SETUP_DIR)/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) -fPIC -cuda -shared $^ -L$(AMGX_DIR)/lib -lamgxsh $(CUDA_LIBS) $(AMGX_RPATH_FLAGS) -o $@
 
 lib-diag: $(LIB_DIR)/libkisti_solver_c.so
@@ -168,15 +171,15 @@ example-fortran: example-diag-fortran
 prepare-run-data:
 	mkdir -p $(RUN_DIR)/diag_c/Mtest $(RUN_DIR)/diag_fortran/Mtest
 	mkdir -p $(RUN_DIR)/ilu_c/Mtest $(RUN_DIR)/ilu_fortran/Mtest
-	cp data/small_csr/*.txt $(RUN_DIR)/diag_c/Mtest/
-	cp data/small_csr/*.txt $(RUN_DIR)/diag_fortran/Mtest/
-	cp data/small_csr/*.txt $(RUN_DIR)/ilu_c/Mtest/
-	cp data/small_csr/*.txt $(RUN_DIR)/ilu_fortran/Mtest/
+	cp $(EXAMPLE_DATA_DIR)/*.txt $(RUN_DIR)/diag_c/Mtest/
+	cp $(EXAMPLE_DATA_DIR)/*.txt $(RUN_DIR)/diag_fortran/Mtest/
+	cp $(EXAMPLE_DATA_DIR)/*.txt $(RUN_DIR)/ilu_c/Mtest/
+	cp $(EXAMPLE_DATA_DIR)/*.txt $(RUN_DIR)/ilu_fortran/Mtest/
 
 prepare-run-data-amgx: prepare-run-data
 	mkdir -p $(RUN_DIR)/amgx_c/Mtest $(RUN_DIR)/amgx_fortran/Mtest
-	cp data/small_csr/*.txt $(RUN_DIR)/amgx_c/Mtest/
-	cp data/small_csr/*.txt $(RUN_DIR)/amgx_fortran/Mtest/
+	cp $(EXAMPLE_DATA_DIR)/*.txt $(RUN_DIR)/amgx_c/Mtest/
+	cp $(EXAMPLE_DATA_DIR)/*.txt $(RUN_DIR)/amgx_fortran/Mtest/
 	cp examples/amgx_config/amgx_config.json $(RUN_DIR)/amgx_c/amgx_config.json
 	cp examples/amgx_config/amgx_config.json $(RUN_DIR)/amgx_fortran/amgx_config.json
 
@@ -216,7 +219,7 @@ amgx-fetch:
 	AMGX_SRC_DIR="$(abspath $(AMGX_SRC_DIR))" \
 	AMGX_GIT_URL="$(AMGX_GIT_URL)" \
 	AMGX_GIT_REF="$(AMGX_GIT_REF)" \
-	tools/amgx/fetch_amgx.sh
+	$(AMGX_SETUP_DIR)/fetch_amgx.sh
 
 amgx-build:
 	AMGX_SRC_DIR="$(abspath $(AMGX_SRC_DIR))" \
@@ -226,15 +229,15 @@ amgx-build:
 	AMGX_NO_MPI="$(AMGX_NO_MPI)" \
 	AMGX_BUILD_JOBS="$(AMGX_BUILD_JOBS)" \
 	CUDA_HOME="$(CUDA_HOME)" \
-	tools/amgx/build_amgx.sh
+	$(AMGX_SETUP_DIR)/build_amgx.sh
 
 amgx-install: amgx-fetch amgx-build
 	@echo "AmgX installed under $(abspath $(AMGX_DIR))."
 	@echo "Run 'make lib-amgx' or 'make run-amgx-c' to validate the AmgX core path."
 
-cupid-bridge:
-	@echo "CUPID/gfortran bridge sources are staged in integration/cupid_gfortran_bridge."
-	@echo "Use this path as the integration evidence layer after the three core solver paths are validated."
+cupid-gfortran-bridge:
+	@echo "CUPID/gfortran bridge sources are staged in src/cupid_gfortran_bridge."
+	@echo "Use this path as application-bridge evidence after the three core solver paths are validated."
 
 clean:
 	rm -rf $(BUILD_DIR)

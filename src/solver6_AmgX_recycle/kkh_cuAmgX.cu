@@ -77,6 +77,8 @@ void kkh_cuAmgX(int n, int nnz,
 
     AMGX_solver_solve(solver, rhs, sol);    // [AmgX] solve with existing solver object.
     AMGX_vector_download(sol, d_vec);       // [AmgX] write solution back to d_vec.
+    AMGX_vector_destroy(sol);
+    AMGX_vector_destroy(rhs);
     
 
     // 정리

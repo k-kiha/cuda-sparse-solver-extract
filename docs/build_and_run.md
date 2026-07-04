@@ -83,8 +83,8 @@ AMGX_DIR ?= /path/to/amgx
 Or install into the repo-local prefix:
 
 ```bash
-tools/amgx/prepare_amgx.sh
-source tools/amgx/env_amgx.sh
+src/amgx_setup/prepare_amgx.sh
+source src/amgx_setup/env_amgx.sh
 ```
 
 Then build and run:
@@ -109,9 +109,13 @@ AMGX_NO_MPI=ON
 On the A100 server used for this extract, the prepare step can be run as:
 
 ```bash
-CUDA_HOME=/apps/cuda/12.9.1 tools/amgx/prepare_amgx.sh
-source tools/amgx/env_amgx.sh
+CUDA_HOME=/apps/cuda/12.9.1 src/amgx_setup/prepare_amgx.sh
+source src/amgx_setup/env_amgx.sh
 ```
+
+This creates `amgx_local/source`, `amgx_local/build`, and
+`amgx_local/install`. The whole `amgx_local/` directory is local generated
+state and is ignored by git.
 
 All core paths together:
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-AMGX_SRC_DIR="${AMGX_SRC_DIR:-external/AMGX}"
+AMGX_SRC_DIR="${AMGX_SRC_DIR:-amgx_local/source}"
 AMGX_GIT_URL="${AMGX_GIT_URL:-https://github.com/NVIDIA/AMGX.git}"
 AMGX_GIT_REF="${AMGX_GIT_REF:-main}"
 

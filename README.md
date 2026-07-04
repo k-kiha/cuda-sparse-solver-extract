@@ -2,9 +2,9 @@
 
 This repository is a public extract of the CUDA C/C++ sparse solver layer from
 a larger KISTI SMR virtual reactor acceleration codebase. The core
-implementation is under `src`. Runnable callers, integration references,
-small CSR input data, documentation, and dependency helpers are kept outside
-the core layer.
+implementation and CUPID/gfortran bridge source are under `src`. Runnable
+callers, small CSR input data, documentation, and generated dependency outputs
+are kept outside the core layer.
 
 ## Core Solver Paths
 
@@ -30,7 +30,9 @@ All pointer arguments are CUDA device pointers.
 
 ```text
 src/                         Core CUDA sparse solver implementation
-include/                     Public C ABI header
+src/include/                 Public C ABI header
+src/amgx_setup/              Scripts that prepare the external AmgX dependency
+src/cupid_gfortran_bridge/   CUPID-like gfortran app to NVHPC/CUDA bridge
 examples/diag_c/             C caller for diagonal BiCGStab
 examples/diag_fortran/       Fortran caller for diagonal BiCGStab
 examples/ilu_c/              C caller for iLU(0)+SpSV BiCGStab
@@ -39,16 +41,14 @@ examples/amgx_c/             C caller for the AmgX core path
 examples/amgx_fortran/       Fortran caller for the AmgX core path
 examples/amgx_config/        AmgX JSON configuration used at runtime
 examples/_common/fortran/    Shared Fortran bind(C) adapter for examples
-integration/                 CUPID-like application integration reference
-archive/                     Legacy helper snippets kept out of the build
-data/small_csr/              Small CSR Ax=b input shared by all examples
-tools/amgx/                  Helper scripts for the AmgX dependency
+examples/data/small_csr/     Small CSR Ax=b input shared by all examples
 docs/                        Focused notes for the CUDA core and runs
 ```
 
 `src` is the part to read first when judging the CUDA sparse solver work.
-`examples` shows how to call that layer. `integration` and `archive` are kept
-separate so they do not look like core solver implementation.
+`examples` shows how to call that layer. `src/cupid_gfortran_bridge` is kept
+inside `src` because it is source-level evidence for connecting the extracted
+CUDA solver layer to the original CUPID-like gfortran application.
 
 ## Build
 
@@ -103,8 +103,8 @@ AmgX is a core solver path in this extract, but it requires the external AmgX
 library. Use an existing installation through `AMGX_DIR` or install it locally:
 
 ```bash
-tools/amgx/prepare_amgx.sh
-source tools/amgx/env_amgx.sh
+src/amgx_setup/prepare_amgx.sh
+source src/amgx_setup/env_amgx.sh
 make core-amgx
 make examples-amgx
 make run-amgx-c
@@ -119,6 +119,9 @@ make run-all
 
 `make test` and `make test-all` remain compatibility aliases for `make run`
 and `make run-all`.
+
+The prepare script creates `amgx_local/` for downloaded AmgX source, build
+files, and the local install prefix. That directory is ignored by git.
 
 ## Documentation
 

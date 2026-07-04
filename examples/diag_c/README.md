@@ -1,7 +1,7 @@
 # Diagonal BiCGStab C Example
 
 This C caller allocates CUDA device memory directly, uploads CSR data from
-`data/small_csr`, and calls the common `kisti_solver_c` ABI.
+`examples/data/small_csr`, and calls the common `kisti_solver_c` ABI.
 
 Build and run:
 

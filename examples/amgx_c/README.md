@@ -1,7 +1,7 @@
 # AmgX C Example
 
 This C caller uses the same device-pointer ABI and links against the AmgX
-solver library. AmgX must be installed or built through `tools/amgx`.
+solver library. AmgX must be installed or built through `src/amgx_setup`.
 
 Build and run:
 
