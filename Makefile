@@ -23,7 +23,8 @@ CUDA_CXXFLAGS ?= -fPIC -cuda -O3 -I$(CUDA_SRC) -I$(CUDA_INC_PATH)
 FORTRAN_FLAGS ?= -cuda -O2
 C_FLAGS ?= -O3 -std=gnu11 -Iinclude -I$(CUDA_INC_PATH)
 RPATH_FLAGS := -Wl,-rpath,$(abspath $(LIB_DIR)) -Wl,-rpath,$(CUDA_LIB_PATH)
-CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas -lnvToolsExt
+NVTX_LIBS ?=
+CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas $(NVTX_LIBS)
 
 .PHONY: all env-check solver example-fortran example-c test ilu amgx amgx-fetch amgx-build amgx-install cupid-bridge clean prepare-run-data
 
@@ -36,7 +37,7 @@ env-check:
 	@test -n "$(CUDA_HOME)" || { echo "Set CUDA_HOME in config.mk."; exit 1; }
 	@test -d "$(CUDA_INC_PATH)" || { echo "missing CUDA_INC_PATH=$(CUDA_INC_PATH)"; exit 1; }
 	@test -d "$(CUDA_LIB_PATH)" || { echo "missing CUDA_LIB_PATH=$(CUDA_LIB_PATH)"; exit 1; }
-	@echo "CUDA showcase environment looks usable."
+	@echo "CUDA sparse solver extract environment looks usable."
 
 $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR):
 	mkdir -p $@

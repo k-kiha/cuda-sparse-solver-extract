@@ -8,6 +8,11 @@ CUDA_HOME ?= /path/to/cuda
 CUDA_INC_PATH ?= $(CUDA_HOME)/include
 CUDA_LIB_PATH ?= $(CUDA_HOME)/lib64
 
+# CUDA 12+ usually provides NVTX through headers and does not require
+# libnvToolsExt at link time. If your older CUDA environment still provides
+# and requires it, enable the next line.
+# NVTX_LIBS ?= -lnvToolsExt
+
 # Optional. Required only for `make amgx`.
 # Future repo-local install target:
 #   make amgx-install

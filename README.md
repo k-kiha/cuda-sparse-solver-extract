@@ -57,6 +57,10 @@ make test
 
 사전 점검은 `make env-check`로 실행합니다. 이 로컬 세션에서는 NVHPC/CUDA 경로가 확인되지 않았으므로 실제 컴파일 성공을 단정하지 않습니다.
 
+CUDA 12 계열에서는 보통 NVTX가 header-only 경로로 처리되므로 기본 링크에
+`-lnvToolsExt`를 넣지 않습니다. 더 오래된 CUDA 환경에서 해당 라이브러리가
+필요하면 `config.mk`에 `NVTX_LIBS ?= -lnvToolsExt`를 추가해 사용합니다.
+
 Optional evidence:
 
 ```bash
