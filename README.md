@@ -2,8 +2,9 @@
 
 This repository is a public extract of the CUDA C/C++ sparse solver layer from
 a larger KISTI SMR virtual reactor acceleration codebase. The core
-implementation is under `src`; the remaining directories are runnable
-examples, small CSR input data, documentation, and dependency helpers.
+implementation is under `src`. Runnable callers, integration references,
+small CSR input data, documentation, and dependency helpers are kept outside
+the core layer.
 
 ## Core Solver Paths
 
@@ -28,24 +29,26 @@ All pointer arguments are CUDA device pointers.
 ## Layout
 
 ```text
-src/                       Core CUDA sparse solver implementation
-examples/fortran_common/   Fortran bind(C) adapter for the same CUDA ABI
-include/                   Public C ABI header
-examples/diag_c/           C caller for diagonal BiCGStab
-examples/diag_fortran/     Fortran caller for diagonal BiCGStab
-examples/ilu_c/            C caller for iLU(0)+SpSV BiCGStab
-examples/ilu_fortran/      Fortran caller for iLU(0)+SpSV BiCGStab
-examples/amgx_c/           C caller for the AmgX core path
-examples/amgx_fortran/     Fortran caller for the AmgX core path
-examples/amgx_config/      AmgX JSON configuration used at runtime
-data/small_csr/            Small CSR Ax=b input shared by all examples
-tools/amgx/                Helper scripts for the AmgX dependency
-docs/                      Focused notes for the CUDA core and runs
+src/                         Core CUDA sparse solver implementation
+include/                     Public C ABI header
+examples/diag_c/             C caller for diagonal BiCGStab
+examples/diag_fortran/       Fortran caller for diagonal BiCGStab
+examples/ilu_c/              C caller for iLU(0)+SpSV BiCGStab
+examples/ilu_fortran/        Fortran caller for iLU(0)+SpSV BiCGStab
+examples/amgx_c/             C caller for the AmgX core path
+examples/amgx_fortran/       Fortran caller for the AmgX core path
+examples/amgx_config/        AmgX JSON configuration used at runtime
+examples/_common/fortran/    Shared Fortran bind(C) adapter for examples
+integration/                 CUPID-like application integration reference
+archive/                     Legacy helper snippets kept out of the build
+data/small_csr/              Small CSR Ax=b input shared by all examples
+tools/amgx/                  Helper scripts for the AmgX dependency
+docs/                        Focused notes for the CUDA core and runs
 ```
 
-`examples/cupid_gfortran_bridge` is kept as a compact integration reference for
-a CUPID-like `gfortran` application calling an NVHPC CUDA solver layer. It is
-not part of the default smoke test.
+`src` is the part to read first when judging the CUDA sparse solver work.
+`examples` shows how to call that layer. `integration` and `archive` are kept
+separate so they do not look like core solver implementation.
 
 ## Build
 
@@ -53,6 +56,18 @@ not part of the default smoke test.
 cp config.mk.example config.mk
 # Edit CUDA_HOME and, for AmgX, AMGX_DIR if needed.
 make env-check
+```
+
+Build only the core no-AmgX libraries:
+
+```bash
+make core
+```
+
+Build only the no-AmgX example executables after the libraries are available:
+
+```bash
+make examples
 ```
 
 CUDA 12+ usually provides NVTX through headers, so this repo does not link

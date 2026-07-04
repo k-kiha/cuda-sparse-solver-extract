@@ -13,7 +13,7 @@ Linked core path:
 
 ```text
 examples/ilu_fortran/main.f90
--> examples/fortran_common/mod_kisti.f90
+-> examples/_common/fortran/mod_kisti.f90
 -> libkisti_solver_c_ilu.so
 -> src/solver7_iLU
 ```

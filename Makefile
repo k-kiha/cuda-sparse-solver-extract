@@ -13,7 +13,7 @@ AMGX_CUDA_ARCH ?= 80
 BUILD_DIR ?= build
 
 CORE_SRC := src
-FORTRAN_COMMON := examples/fortran_common
+FORTRAN_COMMON := examples/_common/fortran
 OBJ_DIR := $(BUILD_DIR)/obj
 LIB_DIR := $(BUILD_DIR)/lib
 BIN_DIR := $(BUILD_DIR)/bin
@@ -29,6 +29,7 @@ CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas $(NVTX_LIBS)
 
 .PHONY: all env-check core core-amgx \
 	lib-diag lib-ilu lib-amgx solver ilu amgx \
+	examples examples-no-amgx examples-amgx \
 	example-diag-c example-diag-fortran \
 	example-ilu-c example-ilu-fortran \
 	example-amgx-c example-amgx-fortran \
@@ -40,9 +41,12 @@ CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas $(NVTX_LIBS)
 	amgx-fetch amgx-build amgx-install cupid-bridge \
 	prepare-run-data prepare-run-data-amgx clean
 
-all: lib-diag example-diag-fortran example-diag-c
+all: core examples
 core: lib-diag lib-ilu
 core-amgx: lib-amgx
+examples: examples-no-amgx
+examples-no-amgx: example-diag-c example-diag-fortran example-ilu-c example-ilu-fortran
+examples-amgx: example-amgx-c example-amgx-fortran
 
 env-check:
 	@command -v $(NVCXX) >/dev/null || { echo "missing NVCXX=$(NVCXX)"; exit 1; }
@@ -205,7 +209,7 @@ amgx-install: amgx-fetch amgx-build
 	@echo "Run 'make lib-amgx' or 'make test-amgx-c' to validate the AmgX core path."
 
 cupid-bridge:
-	@echo "CUPID/gfortran bridge sources are staged in examples/cupid_gfortran_bridge."
+	@echo "CUPID/gfortran bridge sources are staged in integration/cupid_gfortran_bridge."
 	@echo "Use this path as the integration evidence layer after the three core solver paths are validated."
 
 clean:

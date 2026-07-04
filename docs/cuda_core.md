@@ -15,7 +15,7 @@ void kisti_solver_c(int n, int m,
 
 The pointers are CUDA device pointers. C callers allocate them directly with
 the CUDA Runtime. Fortran callers reach the same ABI through `bind(C)` and
-NVFORTRAN `device` arrays in `examples/fortran_common/mod_kisti.f90`.
+NVFORTRAN `device` arrays in `examples/_common/fortran/mod_kisti.f90`.
 
 Compile-time macros select the solver path:
 

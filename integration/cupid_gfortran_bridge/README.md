@@ -11,6 +11,6 @@ Files:
 - `mod_kisti_bridge.f90`: NVFORTRAN CUDA device-array layer
 - `env.example.sh`: target-system module-loading template
 
-This path is staged as integration evidence and is not part of default `make`
-or `make test`. Validate the core CUDA solver first, then adapt this bridge to
-the target CUPID build system.
+This path is staged as integration evidence and is not part of default `make`,
+`make examples`, or `make test`. Validate the core CUDA solver first, then
+adapt this bridge to the target CUPID build system.

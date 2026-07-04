@@ -23,6 +23,27 @@ Check the environment:
 make env-check
 ```
 
+## Build Layers
+
+Build the extracted CUDA sparse solver libraries under `src`:
+
+```bash
+make core
+```
+
+Build the no-AmgX example executables that call those libraries:
+
+```bash
+make examples
+```
+
+Build the AmgX library and examples after AmgX is installed:
+
+```bash
+make core-amgx
+make examples-amgx
+```
+
 ## No-AmgX Core Paths
 
 These commands build and run the diagonal and iLU solver paths with the same

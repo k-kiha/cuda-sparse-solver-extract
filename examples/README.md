@@ -1,6 +1,6 @@
 # Runnable Examples
 
-The examples are thin callers for the core implementation in `src`.
+The example directories are thin callers for the core implementation in `src`.
 They all solve the small CSR `A x = b` case from `data/small_csr`.
 
 | Example | Linked solver library | Core path |
@@ -12,5 +12,20 @@ They all solve the small CSR `A x = b` case from `data/small_csr`.
 | `amgx_c` | `libkisti_solver_c_amgx.so` | AmgX AMG/GMRES path |
 | `amgx_fortran` | `libkisti_solver_c_amgx.so` | AmgX AMG/GMRES path |
 
-`cupid_gfortran_bridge` is an integration reference for a CUPID-like
-application build. It is separate from the minimal solver smoke tests.
+`_common/fortran` is not a standalone example. It is the shared `bind(C)`
+adapter used by the Fortran examples.
+
+Build only the no-AmgX example executables:
+
+```bash
+make examples
+```
+
+Run the no-AmgX examples:
+
+```bash
+make test
+```
+
+The CUPID-like application bridge is kept in `integration/`, not in this
+examples directory.
