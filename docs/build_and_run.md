@@ -44,6 +44,18 @@ make core-amgx
 make examples-amgx
 ```
 
+Build every `src` solver library, including AmgX:
+
+```bash
+make src-all
+```
+
+Build every runnable example, including AmgX:
+
+```bash
+make examples-all
+```
+
 ## No-AmgX Core Paths
 
 These commands build and run the diagonal and iLU solver paths with the same
@@ -80,6 +92,16 @@ Use an existing AmgX install:
 AMGX_DIR ?= /path/to/amgx
 ```
 
+When using an existing AmgX install, edit `config.mk` before the build, skip
+`make amgx-install`, and start from:
+
+```bash
+source src/amgx_setup/env_amgx.sh
+make src-all
+make examples-all
+make run-all
+```
+
 Or install into the repo-local prefix using the values from `config.mk`:
 
 ```bash
@@ -90,13 +112,12 @@ source src/amgx_setup/env_amgx.sh
 `env_amgx.sh` reads `AMGX_DIR` from `config.mk` when present, so a custom
 AmgX install prefix only needs to be written once.
 
-Then build and run:
+Recommended full flow after the repo-local install:
 
 ```bash
-make core-amgx
-make examples-amgx
-make run-amgx-c
-make run-amgx-fortran
+make src-all
+make examples-all
+make run-all
 ```
 
 The prepare script uses these defaults, which can be overridden from the
@@ -122,6 +143,9 @@ Then run:
 ```bash
 make amgx-install
 source src/amgx_setup/env_amgx.sh
+make src-all
+make examples-all
+make run-all
 ```
 
 This creates `amgx_local/source`, `amgx_local/build`, and

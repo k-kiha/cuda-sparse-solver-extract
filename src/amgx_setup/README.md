@@ -56,9 +56,13 @@ source src/amgx_setup/env_amgx.sh
 Build and run the AmgX core path:
 
 ```bash
-make lib-amgx
-make run-amgx-c
-make run-amgx-fortran
+make src-all
+make examples-all
+make run-all
 ```
+
+If AmgX is already installed outside this repository, set `AMGX_DIR` in
+`config.mk`, skip `make amgx-install`, then run `source
+src/amgx_setup/env_amgx.sh` before the build/run commands.
 
 For an NVIDIA A100 server, the default `AMGX_CUDA_ARCH` is `80`.

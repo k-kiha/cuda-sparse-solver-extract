@@ -34,9 +34,9 @@ AMGX_RPATH_FLAGS := -Wl,-rpath,$(abspath $(AMGX_DIR)/lib)
 NVTX_LIBS ?=
 CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas $(NVTX_LIBS)
 
-.PHONY: all env-check core core-amgx \
+.PHONY: all env-check core core-amgx src-all \
 	lib-diag lib-ilu lib-amgx solver ilu amgx \
-	examples examples-no-amgx examples-amgx \
+	examples examples-no-amgx examples-amgx examples-all \
 	example-diag-c example-diag-fortran \
 	example-ilu-c example-ilu-fortran \
 	example-amgx-c example-amgx-fortran \
@@ -55,9 +55,11 @@ CUDA_LIBS := -L$(CUDA_LIB_PATH) -lcusparse -lcudart -lcublas $(NVTX_LIBS)
 all: core examples
 core: lib-diag lib-ilu
 core-amgx: lib-amgx
+src-all: core core-amgx
 examples: examples-no-amgx
 examples-no-amgx: example-diag-c example-diag-fortran example-ilu-c example-ilu-fortran
 examples-amgx: example-amgx-c example-amgx-fortran
+examples-all: examples-no-amgx examples-amgx
 
 env-check:
 	@command -v $(NVCXX) >/dev/null || { echo "missing NVCXX=$(NVCXX)"; exit 1; }
@@ -84,7 +86,7 @@ $(OBJ_DIR)/kkh_cuiLUbicg.o: $(CORE_SRC)/solver7_iLU/kkh_cuiLUbicg.cu | $(OBJ_DIR
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/kkh_cuAmgX_recycle.o: $(CORE_SRC)/solver6_AmgX_recycle/kkh_cuAmgX.cu | $(OBJ_DIR)
-	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run '$(AMGX_SETUP_DIR)/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
+	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'make amgx-install' or set AMGX_DIR in config.mk."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -I$(AMGX_DIR)/include -c $< -o $@
 
 $(OBJ_DIR)/kisti_solver_c_diag.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
@@ -94,7 +96,7 @@ $(OBJ_DIR)/kisti_solver_c_ilu.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_ILU -c $< -o $@
 
 $(OBJ_DIR)/kisti_solver_c_amgx.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
-	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run '$(AMGX_SETUP_DIR)/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
+	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'make amgx-install' or set AMGX_DIR in config.mk."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_AMGX -I$(AMGX_DIR)/include -c $< -o $@
 
 $(LIB_DIR)/libkisti_solver_c.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_cudiagbicg.o $(OBJ_DIR)/kisti_solver_c_diag.o | $(LIB_DIR)
@@ -104,7 +106,7 @@ $(LIB_DIR)/libkisti_solver_c_ilu.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_i
 	$(NVCXX) -fPIC -cuda -shared $^ $(CUDA_LIBS) -o $@
 
 $(LIB_DIR)/libkisti_solver_c_amgx.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_cuAmgX_recycle.o $(OBJ_DIR)/kisti_solver_c_amgx.o | $(LIB_DIR)
-	@test -f "$(AMGX_DIR)/lib/libamgxsh.so" || { echo "AmgX core path requires $(AMGX_DIR)/lib/libamgxsh.so. Run '$(AMGX_SETUP_DIR)/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
+	@test -f "$(AMGX_DIR)/lib/libamgxsh.so" || { echo "AmgX core path requires $(AMGX_DIR)/lib/libamgxsh.so. Run 'make amgx-install' or set AMGX_DIR in config.mk."; exit 1; }
 	$(NVCXX) -fPIC -cuda -shared $^ -L$(AMGX_DIR)/lib -lamgxsh $(CUDA_LIBS) $(AMGX_RPATH_FLAGS) -o $@
 
 lib-diag: $(LIB_DIR)/libkisti_solver_c.so

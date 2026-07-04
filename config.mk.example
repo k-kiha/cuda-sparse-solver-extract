@@ -4,6 +4,9 @@ NVFORTRAN ?= nvfortran
 NVC ?= nvc
 NVCXX ?= nvc++
 
+# A100 server setting used for this extract:
+#   CUDA_HOME ?= /apps/cuda/12.9.1
+# Keep the generic placeholder below if this repo is moved to another system.
 CUDA_HOME ?= /path/to/cuda
 CUDA_INC_PATH ?= $(CUDA_HOME)/include
 CUDA_LIB_PATH ?= $(CUDA_HOME)/lib64
@@ -17,7 +20,11 @@ CUDA_LIB_PATH ?= $(CUDA_HOME)/lib64
 # Repo-local install through Make. These values are used by:
 #   make amgx-install
 #   make lib-amgx
+# Default for this repo: `make amgx-install` installs AmgX here.
 AMGX_DIR ?= $(CURDIR)/amgx_local/install
+# If you use an already installed external AmgX instead, replace AMGX_DIR with
+# that install prefix. It must contain include/ and lib/libamgxsh.so.
+#   AMGX_DIR ?= /path/to/existing/amgx
 AMGX_SRC_DIR ?= $(CURDIR)/amgx_local/source
 AMGX_BUILD_DIR ?= $(CURDIR)/amgx_local/build
 AMGX_CUDA_ARCH ?= 80
