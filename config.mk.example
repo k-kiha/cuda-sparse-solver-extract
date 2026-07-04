@@ -1,0 +1,20 @@
+# Copy this file to config.mk and adjust paths for your CUDA/NVHPC system.
+
+NVFORTRAN ?= nvfortran
+NVC ?= nvc
+NVCXX ?= nvc++
+
+CUDA_HOME ?= /path/to/cuda
+CUDA_INC_PATH ?= $(CUDA_HOME)/include
+CUDA_LIB_PATH ?= $(CUDA_HOME)/lib64
+
+# Optional. Required only for `make amgx`.
+# Future repo-local install target:
+#   make amgx-install
+#   make amgx
+AMGX_DIR ?= $(CURDIR)/.local/amgx
+AMGX_SRC_DIR ?= $(CURDIR)/external/AMGX
+AMGX_BUILD_DIR ?= $(AMGX_SRC_DIR)/build
+AMGX_CUDA_ARCH ?= 80
+
+BUILD_DIR ?= build

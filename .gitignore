@@ -1,0 +1,10 @@
+build/
+config.mk
+.local/
+external/AMGX/
+*.o
+*.mod
+*.so
+*.exe
+result*.txt
+.DS_Store
