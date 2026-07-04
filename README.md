@@ -103,8 +103,10 @@ AmgX is a core solver path in this extract, but it requires the external AmgX
 library. Use an existing installation through `AMGX_DIR` or install it locally:
 
 ```bash
-make amgx-install
+tools/amgx/prepare_amgx.sh
 source tools/amgx/env_amgx.sh
+make core-amgx
+make examples-amgx
 make run-amgx-c
 make run-amgx-fortran
 ```

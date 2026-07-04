@@ -10,6 +10,10 @@ AMGX_DIR ?= $(CURDIR)/.local/amgx
 AMGX_SRC_DIR ?= $(CURDIR)/external/AMGX
 AMGX_BUILD_DIR ?= $(AMGX_SRC_DIR)/build
 AMGX_CUDA_ARCH ?= 80
+AMGX_GIT_URL ?= https://github.com/NVIDIA/AMGX.git
+AMGX_GIT_REF ?= main
+AMGX_NO_MPI ?= ON
+AMGX_BUILD_JOBS ?=
 BUILD_DIR ?= build
 
 CORE_SRC := src
@@ -77,7 +81,7 @@ $(OBJ_DIR)/kkh_cuiLUbicg.o: $(CORE_SRC)/solver7_iLU/kkh_cuiLUbicg.cu | $(OBJ_DIR
 	$(NVCXX) $(CUDA_CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/kkh_cuAmgX_recycle.o: $(CORE_SRC)/solver6_AmgX_recycle/kkh_cuAmgX.cu | $(OBJ_DIR)
-	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'make amgx-install' or set AMGX_DIR."; exit 1; }
+	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'tools/amgx/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -I$(AMGX_DIR)/include -c $< -o $@
 
 $(OBJ_DIR)/kisti_solver_c_diag.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
@@ -87,7 +91,7 @@ $(OBJ_DIR)/kisti_solver_c_ilu.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_ILU -c $< -o $@
 
 $(OBJ_DIR)/kisti_solver_c_amgx.o: $(CORE_SRC)/kisti_solver_c.cu | $(OBJ_DIR)
-	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'make amgx-install' or set AMGX_DIR."; exit 1; }
+	@test -d "$(AMGX_DIR)/include" || { echo "AmgX core path requires AMGX_DIR=$(AMGX_DIR). Run 'tools/amgx/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) $(CUDA_CXXFLAGS) -DKISTI_SOLVER_AMGX -I$(AMGX_DIR)/include -c $< -o $@
 
 $(LIB_DIR)/libkisti_solver_c.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_cudiagbicg.o $(OBJ_DIR)/kisti_solver_c_diag.o | $(LIB_DIR)
@@ -97,7 +101,7 @@ $(LIB_DIR)/libkisti_solver_c_ilu.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_i
 	$(NVCXX) -fPIC -cuda -shared $^ $(CUDA_LIBS) -o $@
 
 $(LIB_DIR)/libkisti_solver_c_amgx.so: $(OBJ_DIR)/kkh_cudatools.o $(OBJ_DIR)/kkh_cuAmgX_recycle.o $(OBJ_DIR)/kisti_solver_c_amgx.o | $(LIB_DIR)
-	@test -f "$(AMGX_DIR)/lib/libamgxsh.so" || { echo "AmgX core path requires $(AMGX_DIR)/lib/libamgxsh.so. Run 'make amgx-install' or set AMGX_DIR."; exit 1; }
+	@test -f "$(AMGX_DIR)/lib/libamgxsh.so" || { echo "AmgX core path requires $(AMGX_DIR)/lib/libamgxsh.so. Run 'tools/amgx/prepare_amgx.sh' or set AMGX_DIR."; exit 1; }
 	$(NVCXX) -fPIC -cuda -shared $^ -L$(AMGX_DIR)/lib -lamgxsh $(CUDA_LIBS) $(AMGX_RPATH_FLAGS) -o $@
 
 lib-diag: $(LIB_DIR)/libkisti_solver_c.so
@@ -209,13 +213,19 @@ test-all: run-all
 test: run
 
 amgx-fetch:
-	AMGX_SRC_DIR="$(abspath $(AMGX_SRC_DIR))" tools/amgx/fetch_amgx.sh
+	AMGX_SRC_DIR="$(abspath $(AMGX_SRC_DIR))" \
+	AMGX_GIT_URL="$(AMGX_GIT_URL)" \
+	AMGX_GIT_REF="$(AMGX_GIT_REF)" \
+	tools/amgx/fetch_amgx.sh
 
 amgx-build:
 	AMGX_SRC_DIR="$(abspath $(AMGX_SRC_DIR))" \
 	AMGX_BUILD_DIR="$(abspath $(AMGX_BUILD_DIR))" \
 	AMGX_INSTALL_DIR="$(abspath $(AMGX_DIR))" \
 	AMGX_CUDA_ARCH="$(AMGX_CUDA_ARCH)" \
+	AMGX_NO_MPI="$(AMGX_NO_MPI)" \
+	AMGX_BUILD_JOBS="$(AMGX_BUILD_JOBS)" \
+	CUDA_HOME="$(CUDA_HOME)" \
 	tools/amgx/build_amgx.sh
 
 amgx-install: amgx-fetch amgx-build
